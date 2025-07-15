@@ -6,6 +6,8 @@
     "start": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build --configuration production",
     "build:prod": "ng build --configuration production --output-path=dist",
+    "serve:static": "npx serve -s dist -l 4200 -c serve.json",
+    "deploy": "npm run build && npm run serve:static",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:prod": "ng serve --configuration production"
@@ -26,7 +28,8 @@
     "@angular/router": "^17.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.0"
+    "zone.js": "~0.14.0",
+    "serve": "^14.2.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.0",
