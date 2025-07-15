@@ -1,0 +1,8 @@
+[phases.build]
+cmd = "echo 'No build needed for Node.js backend'"
+
+[phases.install]
+cmd = "npm install"
+
+[phases.start]
+cmd = "npm start"
