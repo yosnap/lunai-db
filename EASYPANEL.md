@@ -1,27 +1,33 @@
 # Configuración para EasyPanel
 
-## Variables de Entorno Requeridas
+## Opción 1: Servicios Separados (Recomendado)
 
-### Frontend
-- `API_URL`: URL del backend (configurar: `https://api.lun-ai.es`)
+### Frontend Service
+- **Dockerfile**: `frontend/Dockerfile`
+- **Puerto**: `4200`
+- **Variables de entorno**:
+  - `API_URL`: `https://api.lun-ai.es`
 
-### Backend
-- `NODE_ENV`: `production`
-- `PORT`: `3010`
-- `DB_HOST`: Host de la base de datos PostgreSQL
-- `DB_PORT`: Puerto de la base de datos (default: `5432`)
-- `DB_DATABASE`: Nombre de la base de datos
-- `DB_USER`: Usuario de la base de datos
-- `DB_PASSWORD`: Contraseña de la base de datos
-- `FRONTEND_URL`: URL del frontend para CORS (configurar: `https://users.lun-ai.es`)
+### Backend Service
+- **Dockerfile**: `backend/Dockerfile`
+- **Puerto**: `3010`
+- **Variables de entorno**:
+  - `NODE_ENV`: `production`
+  - `PORT`: `3010`
+  - `DB_HOST`: Host de la base de datos PostgreSQL
+  - `DB_PORT`: Puerto de la base de datos (default: `5432`)
+  - `DB_DATABASE`: Nombre de la base de datos
+  - `DB_USER`: Usuario de la base de datos
+  - `DB_PASSWORD`: Contraseña de la base de datos
+  - `FRONTEND_URL`: `https://users.lun-ai.es`
 
-## Configuración del Proyecto
+## Opción 2: Servicio Unificado
 
-1. **Dockerfile**: Usa el `Dockerfile` en la raíz del proyecto
+1. **Dockerfile**: `Dockerfile` (en la raíz del proyecto)
 2. **Puertos**: 
    - Frontend: `4200`
    - Backend: `3010`
-3. **Base de datos**: PostgreSQL requerida
+3. **Variables de entorno**: Combina las variables de ambos servicios
 
 ## Comandos de Build
 
