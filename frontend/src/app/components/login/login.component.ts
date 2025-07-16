@@ -35,7 +35,7 @@ import { HttpClientModule } from '@angular/common/http';
 
           <div class="form-group">
             <label class="form-label" for="password">Contraseña</label>
-            <div class="input-group">
+            <div class="position-relative">
               <input
                 [type]="showPassword ? 'text' : 'password'"
                 id="password"
@@ -43,18 +43,20 @@ import { HttpClientModule } from '@angular/common/http';
                 class="form-control"
                 [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
                 placeholder="Ingresa tu contraseña"
+                style="padding-right: 40px;"
               >
               <button
                 type="button"
-                class="btn btn-outline-secondary"
+                class="btn btn-sm position-absolute"
                 (click)="togglePassword()"
                 tabindex="-1"
+                style="right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 0.25rem 0.5rem;"
               >
-                {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+                <span style="font-size: 1.2rem;">{{ showPassword ? '👁️' : '👁️‍🗨️' }}</span>
               </button>
-            </div>
-            <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-              La contraseña es requerida
+              <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                La contraseña es requerida
+              </div>
             </div>
           </div>
 
