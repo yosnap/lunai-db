@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   template: `
     <div class="login-container">
       <div class="login-card">
@@ -18,30 +19,40 @@ import { AuthService } from '../../services/auth.service';
 
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
           <div class="form-group">
-            <label class="form-label" for="username">Usuario</label>
+            <label class="form-label" for="email">Email</label>
             <input
-              type="text"
-              id="username"
-              formControlName="username"
+              type="email"
+              id="email"
+              formControlName="email"
               class="form-control"
-              [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-              placeholder="Ingresa tu usuario"
+              [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+              placeholder="Ingresa tu email"
             >
-            <div class="invalid-feedback" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
-              El usuario es requerido
+            <div class="invalid-feedback" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+              El email es requerido y debe ser válido
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="password">Contraseña</label>
-            <input
-              type="password"
-              id="password"
-              formControlName="password"
-              class="form-control"
-              [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-              placeholder="Ingresa tu contraseña"
-            >
+            <div class="input-group">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                placeholder="Ingresa tu contraseña"
+              >
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="togglePassword()"
+                tabindex="-1"
+              >
+                {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+              </button>
+            </div>
             <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
               La contraseña es requerida
             </div>
@@ -49,6 +60,11 @@ import { AuthService } from '../../services/auth.service';
 
           <div class="alert alert-danger" *ngIf="errorMessage">
             {{ errorMessage }}
+          </div>
+
+          <div class="alert alert-info" style="font-size: 0.875rem;">
+            <strong>Nota:</strong> Ahora usa autenticación real con la base de datos.<br>
+            Ingresa con tu <strong>email</strong> y contraseña.
           </div>
 
           <button
@@ -145,6 +161,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -152,7 +169,7 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
@@ -173,16 +190,23 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { username, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
-    // Usar autenticación simple
-    if (this.authService.simpleAuth(username, password)) {
-      this.router.navigate(['/users']);
-    } else {
-      this.errorMessage = 'Credenciales incorrectas. Verifica tu usuario y contraseña.';
-    }
-
-    this.isLoading = false;
+    // Usar autenticación real del backend
+    this.authService.login({ email, password }).subscribe({
+      next: (response) => {
+        console.log('Login exitoso:', response);
+        this.router.navigate(['/users']);
+      },
+      error: (error) => {
+        console.error('Error de login:', error);
+        this.errorMessage = error.error?.error || 'Credenciales incorrectas. Verifica tu email y contraseña.';
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   private markFormGroupTouched() {
@@ -190,5 +214,9 @@ export class LoginComponent {
       const control = this.loginForm.get(key);
       control?.markAsTouched();
     });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 }
