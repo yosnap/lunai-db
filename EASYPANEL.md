@@ -4,7 +4,7 @@
 
 ### Frontend Service
 - **Dockerfile**: `frontend/Dockerfile`
-- **Puerto**: `4200`
+- **Puerto**: `80`
 - **Variables de entorno**:
   - `API_URL`: `https://api.lun-ai.es`
 
