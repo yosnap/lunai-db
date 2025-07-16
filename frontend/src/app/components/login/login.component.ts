@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -193,6 +194,10 @@ export class LoginComponent {
     this.errorMessage = '';
 
     const { email, password } = this.loginForm.value;
+    
+    // Debug: mostrar qué se está enviando
+    console.log('Intentando login con:', { email, password });
+    console.log('API URL:', environment.apiUrl);
 
     // Usar autenticación real del backend
     this.authService.login({ email, password }).subscribe({
