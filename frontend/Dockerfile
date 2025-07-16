@@ -25,8 +25,11 @@ RUN echo "export const environment = {" > src/environments/environment.prod.ts &
 # Build the application
 RUN npm run build:prod
 
+# Copy serve.json into the dist directory
+RUN cp serve.json dist/
+
 # Expose port
 EXPOSE 80
 
 # Serve the application
-CMD ["npx", "serve", "-s", "dist", "-l", "80", "-c", "serve.json"]
+CMD ["npx", "serve", "-s", "dist", "-l", "80"]
