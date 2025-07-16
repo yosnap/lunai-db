@@ -3,24 +3,18 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
+const config = require('./config');
 
 const app = express();
-const port = 3010;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Enable CORS for all routes
-app.use(cors());
+// Enable CORS with configuration
+app.use(cors(config.cors));
 
 // PostgreSQL connection pool
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+const pool = new Pool(config.database);
 
 // Basic route to check if the server is running
 app.get('/', (req, res) => {
@@ -194,6 +188,8 @@ app.get('/api/roles', async (req, res) => {
 });
 
 
-app.listen(port, () => {
-  console.log(`Backend server listening at http://localhost:${port}`);
+app.listen(config.port, () => {
+  console.log(`Backend server listening at http://localhost:${config.port}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`CORS origins: ${JSON.stringify(config.cors.origin)}`);
 });
