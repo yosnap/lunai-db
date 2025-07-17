@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +35,7 @@ import { environment } from '../../environments/environment';
 
           <div class="form-group">
             <label class="form-label" for="password">Contraseña</label>
-            <div class="position-relative">
+            <div style="position: relative;">
               <input
                 [type]="showPassword ? 'text' : 'password'"
                 id="password"
@@ -46,28 +45,26 @@ import { environment } from '../../environments/environment';
                 placeholder="Ingresa tu contraseña"
                 style="padding-right: 40px;"
               >
-              <button
-                type="button"
-                class="btn btn-sm position-absolute"
+              <span
                 (click)="togglePassword()"
-                tabindex="-1"
-                style="right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 0.25rem 0.5rem;"
+                style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d; height: -webkit-fill-available; font-size: 18px;"
+                title="{{ showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña' }}"
               >
-                <span style="font-size: 1.2rem;">{{ showPassword ? '👁️' : '👁️‍🗨️' }}</span>
-              </button>
-              <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                La contraseña es requerida
-              </div>
+                <svg *ngIf="!showPassword" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+                <svg *ngIf="showPassword" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                </svg>
+              </span>
+            </div>
+            <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+              La contraseña es requerida
             </div>
           </div>
 
           <div class="alert alert-danger" *ngIf="errorMessage">
             {{ errorMessage }}
-          </div>
-
-          <div class="alert alert-info" style="font-size: 0.875rem;">
-            <strong>Nota:</strong> Ahora usa autenticación real con la base de datos.<br>
-            Ingresa con tu <strong>email</strong> y contraseña.
           </div>
 
           <button
@@ -194,10 +191,9 @@ export class LoginComponent {
     this.errorMessage = '';
 
     const { email, password } = this.loginForm.value;
-    
+
     // Debug: mostrar qué se está enviando
     console.log('Intentando login con:', { email, password });
-    console.log('API URL:', environment.apiUrl);
 
     // Usar autenticación real del backend
     this.authService.login({ email, password }).subscribe({
