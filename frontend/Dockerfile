@@ -16,10 +16,10 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Create environment file with build-time API_URL
+# Create environment file with hardcoded production API_URL
 RUN echo "export const environment = {" > src/environments/environment.prod.ts && \
     echo "  production: true," >> src/environments/environment.prod.ts && \
-    echo "  apiUrl: '${API_URL:-https://api.lun-ai.es}/api'" >> src/environments/environment.prod.ts && \
+    echo "  apiUrl: 'https://api.lun-ai.es/api'" >> src/environments/environment.prod.ts && \
     echo "};" >> src/environments/environment.prod.ts
 
 # Build the application
